@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Furever Care: Prototype Aplikasi Pet Care</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#FBF5E9;--card:#FFFDF8;--line:#E6DCC8;--ink:#2B2438;--mut:#5C5470;--acc:#6B4FB3;--acct:#6B4FB3;--lils:#E7DFF7;--tile:#F3ECFB;--red:#B83A4B;--grn:#2F7D5B;--wbg:#FFF1D6;--wline:#E8C77A;--wink:#6B4300;--gb:#E4E0EA;--gt:#5F5A6B;color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#17131F;--card:#221C2E;--line:#3A3150;--ink:#F1EBFA;--mut:#B7ADCB;--acc:#7A5CD0;--acct:#C4B3F0;--lils:#3A3050;--tile:#2C2540;--wbg:#3B2E12;--wline:#7A5F1E;--wink:#F5DDA6;--gb:#2E2A3C;--gt:#A8A2B8;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#17131F;--card:#221C2E;--line:#3A3150;--ink:#F1EBFA;--mut:#B7ADCB;--acc:#7A5CD0;--acct:#C4B3F0;--lils:#3A3050;--tile:#2C2540;--wbg:#3B2E12;--wline:#7A5F1E;--wink:#F5DDA6;--gb:#2E2A3C;--gt:#A8A2B8;color-scheme:dark}
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,sans-serif;-webkit-text-size-adjust:100%}
+button,input{font-family:inherit}
+button{cursor:pointer}
+[hidden]{display:none!important}
+.app{max-width:430px;margin:0 auto;padding:16px 20px 104px;min-height:100vh}
+.top{display:flex;justify-content:space-between;align-items:center}
+.logo{display:flex;align-items:center;gap:10px;font-size:18px;font-weight:700}
+.logo span{color:var(--acct)}
+.trail{display:flex;gap:6px;align-items:center}
+h1{margin:0;font-size:26px;line-height:1.2}
+.tag{margin:10px 0 16px;font-size:14px;color:var(--mut)}
+.banner{display:flex;gap:10px;align-items:flex-start;background:var(--wbg);border:1px solid var(--wline);border-radius:12px;padding:12px 14px;margin:0 0 20px;font-size:13px;line-height:1.45;color:var(--wink)}
+.banner svg{flex:none;margin-top:1px}
+.card{position:relative;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:12px}
+.pet{display:flex;gap:12px;align-items:center}
+.pet b{display:block;font-size:18px}
+.sub{font-size:13px;color:var(--mut)}
+.head{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.pill{background:var(--grn);color:#fff;font-size:12px;font-weight:700;padding:6px 12px;border-radius:999px;white-space:nowrap}
+.pill.red{background:var(--red)}.pill.acc{background:var(--acc)}.pill.mut{background:#5C5470}
+.tiles{display:flex;gap:8px;margin:14px 0}
+.tile{flex:1;background:var(--tile);border-radius:10px;padding:10px}
+.tile small{display:block;font-size:12px;color:var(--mut)}.tile b{font-size:16px}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;height:48px;border:0;border-radius:12px;background:var(--acc);color:#fff;font-size:15px;font-weight:600}
+.btn:hover{filter:brightness(1.08)}
+.btn2{background:var(--card);color:var(--acct);border:1.5px solid var(--acc)}
+.btn:disabled{background:var(--gb);color:var(--gt);cursor:not-allowed;filter:none}
+.btn:focus-visible,.nav button:focus-visible,.back:focus-visible,.send:focus-visible,input:focus-visible{outline:3px solid var(--acct);outline-offset:2px}
+.ears{position:absolute;top:-11px;left:22px}
+.row{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px solid var(--line);font-size:14px}
+.row:last-child{border:0}.row b{text-align:right}.row i{font-style:normal;font-weight:400;color:var(--mut)}
+.lbl{font-size:13px;font-weight:600;color:var(--mut);margin-bottom:10px}
+.tl{font-size:14px;line-height:1.9}
+.back{border:0;background:none;color:var(--ink);min-width:44px;min-height:44px;display:flex;align-items:center;padding:0;margin-top:6px}
+.nav{position:fixed;left:50%;transform:translateX(-50%);bottom:0;width:min(430px,100%);display:flex;background:var(--card);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px)}
+.nav button{flex:1;min-height:64px;border:0;background:none;color:var(--mut);font-size:12px;font-weight:600;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px}
+.nav button[aria-current="page"]{color:var(--acct)}
+body[data-view="chat"] .nav{display:none}
+.vet b{font-size:16px;display:block}
+.shift{display:flex;justify-content:space-between;align-items:center;margin:12px 0;font-size:13px;color:var(--mut)}
+.bubs{display:flex;flex-direction:column;gap:12px;margin-top:12px}
+.m{display:flex;flex-direction:column;align-items:flex-start}.m.me{align-items:flex-end}
+.m div{max-width:80%;background:var(--card);border:1px solid var(--line);font-size:14px;line-height:1.45;padding:10px 14px;border-radius:16px 16px 16px 4px}
+.m.me div{background:var(--acc);color:#fff;border-color:var(--acc);border-radius:16px 16px 4px 16px}
+.m small{font-size:11px;color:var(--mut);margin-top:3px}
+.compose{position:fixed;left:50%;transform:translateX(-50%);bottom:0;width:min(430px,100%);display:flex;gap:10px;align-items:center;background:var(--card);border-top:1px solid var(--line);padding:12px 16px calc(12px + env(safe-area-inset-bottom,0px))}
+body:not([data-view="chat"]) .compose{display:none}
+.compose input{flex:1;height:44px;border:1px solid var(--line);border-radius:22px;background:var(--bg);color:var(--ink);padding:0 16px;font-size:14px}
+.send{width:44px;height:44px;border:0;border-radius:50%;background:var(--acc);color:#fff;display:flex;align-items:center;justify-content:center}
+.chead{display:flex;align-items:center;gap:8px;margin:12px 0 12px}
+.chead div{flex:1}
+.chead b{font-size:15px}
+</style>
+</head>
+<body data-view="beranda">
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+<symbol id="logo" viewBox="0 0 36 36"><rect width="36" height="36" rx="11" style="fill:var(--acc)"/><path d="M8 17L9.5 6L16 11Z" fill="#F2A04B"/><path d="M26 10C32 9 34.5 17 31 23L25.5 15Z" fill="#E8D5B5"/><circle cx="18" cy="20" r="9.5" fill="#FBF5E9"/><ellipse cx="14.5" cy="19.5" rx="1.3" ry="1.7" fill="#2B2438"/><ellipse cx="21.5" cy="19.5" rx="1.3" ry="1.7" fill="#2B2438"/><ellipse cx="18" cy="23.4" rx="1.8" ry="1.3" fill="#2B2438"/></symbol>
+<symbol id="cat" viewBox="0 0 44 44"><circle cx="22" cy="22" r="22" style="fill:var(--lils)"/><path d="M8.5 22L9.5 5L20.5 12.5Z M35.5 22L34.5 5L23.5 12.5Z" fill="#F2A04B"/><path d="M12 17.5L12.5 9.5L18 13.5Z M32 17.5L31.5 9.5L26 13.5Z" fill="#E58FA3"/><ellipse cx="22" cy="26" rx="14" ry="12.5" fill="#F2A04B"/><path d="M22 14.5v4M18.3 15.3l.9 3M25.7 15.3l-.9 3" stroke="#D9822B" stroke-width="1.7" stroke-linecap="round"/><ellipse cx="16.5" cy="25" rx="2.3" ry="2.9" fill="#2B2438"/><ellipse cx="27.5" cy="25" rx="2.3" ry="2.9" fill="#2B2438"/><circle cx="17.2" cy="24" r=".9" fill="#fff"/><circle cx="28.2" cy="24" r=".9" fill="#fff"/><ellipse cx="22" cy="31.5" rx="5.8" ry="4.2" fill="#FBF5E9"/><path d="M20 29h4l-2 2.2z" fill="#E58FA3"/><path d="M22 31.2v1.5M19.6 33q2.4 1.8 4.8 0" stroke="#2B2438" stroke-width="1" fill="none" stroke-linecap="round"/><path d="M12 31l-6.5-1.2M12 33.5l-6 2M32 31l6.5-1.2M32 33.5l6 2" stroke="#D9822B" stroke-width="1" stroke-linecap="round"/></symbol>
+<symbol id="dog" viewBox="0 0 44 44"><circle cx="22" cy="22" r="22" style="fill:var(--lils)"/><path d="M12 14C5 14 4 28 9 34C14 31 15 22 15 16Z M32 14C39 14 40 28 35 34C30 31 29 22 29 16Z" fill="#B89B72"/><ellipse cx="22" cy="24" rx="11.5" ry="12" fill="#E8D5B5"/><ellipse cx="17" cy="21" rx="1.9" ry="2.3" fill="#2B2438"/><ellipse cx="27" cy="21" rx="1.9" ry="2.3" fill="#2B2438"/><circle cx="17.6" cy="20.2" r=".8" fill="#fff"/><circle cx="27.6" cy="20.2" r=".8" fill="#fff"/><ellipse cx="22" cy="30" rx="6.5" ry="5" fill="#FBF5E9"/><ellipse cx="22" cy="27.5" rx="2.8" ry="2" fill="#2B2438"/><path d="M22 29.5v2.2M19.5 32.3q2.5 1.8 5 0" stroke="#2B2438" stroke-width="1.1" fill="none" stroke-linecap="round"/></symbol>
+<symbol id="vet" viewBox="0 0 52 52"><circle cx="26" cy="26" r="26" style="fill:var(--lils)"/><circle cx="26" cy="20" r="8" style="fill:var(--acc)"/><path d="M10 44C11 34 18 30 26 30C34 30 41 34 42 44Z" style="fill:var(--acc)"/><path d="M21 33L26 41L31 33" stroke="#FBF5E9" stroke-width="2" fill="none" stroke-linecap="round"/></symbol>
+<symbol id="paw" viewBox="0 0 24 24"><ellipse cx="12" cy="16" rx="5.5" ry="4.5"/><circle cx="5" cy="10" r="2.3"/><circle cx="9.5" cy="5.5" r="2.3"/><circle cx="14.5" cy="5.5" r="2.3"/><circle cx="19" cy="10" r="2.3"/></symbol>
+<symbol id="bone" viewBox="0 0 26 14"><rect x="5" y="4.5" width="16" height="5" rx="2.5"/><circle cx="4.5" cy="3.8" r="3.2"/><circle cx="4.5" cy="10.2" r="3.2"/><circle cx="21.5" cy="3.8" r="3.2"/><circle cx="21.5" cy="10.2" r="3.2"/></symbol>
+<symbol id="earc" viewBox="0 0 70 12"><path d="M0 12L9 0L24 12Z M46 12L61 0L70 12Z" fill="#F2A04B"/></symbol>
+<symbol id="eard" viewBox="0 0 76 14"><path d="M0 14Q2 0 14 0Q26 1 26 14Z M50 14Q50 1 62 0Q74 0 76 14Z" fill="#E8D5B5"/></symbol>
+<symbol id="warn" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3L2 21h20z"/><path d="M12 10v5M12 18v.5"/></g></symbol>
+<symbol id="home" viewBox="0 0 24 24"><path d="M3 11l9-8 9 8v10H3z" fill="none" stroke="currentColor" stroke-width="2"/></symbol>
+<symbol id="doc" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3h9l4 4v14H6z"/><path d="M9 12h7M9 16h7"/></g></symbol>
+<symbol id="heart" viewBox="0 0 24 24"><path d="M12 21s-8-5-8-11a4.5 4.5 0 018-2.8A4.5 4.5 0 0120 10c0 6-8 11-8 11z" fill="none" stroke="currentColor" stroke-width="2"/></symbol>
+<symbol id="chat" viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z" fill="none" stroke="currentColor" stroke-width="2"/></symbol>
+<symbol id="back" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2"/></symbol>
+<symbol id="send" viewBox="0 0 24 24"><path d="M4 12L20 4L13 20L11 13Z" fill="none" stroke="currentColor" stroke-width="2"/></symbol>
+</svg>
+<main class="app">
+<div class="top"><div class="logo"><svg width="36" height="36" role="img" aria-label="Logo Furever Care"><use href="#logo"/></svg><div>Furever <span>Care</span></div></div>
+<div class="trail" aria-hidden="true"><svg width="26" height="14" style="fill:#D5C8F0"><use href="#bone"/></svg><svg width="14" height="14" style="fill:#D5C8F0;transform:rotate(-20deg)"><use href="#paw"/></svg><svg width="16" height="16" style="fill:#C9B9EC;transform:rotate(10deg)"><use href="#paw"/></svg><svg width="18" height="18" style="fill:#B9A5E6;transform:rotate(-10deg)"><use href="#paw"/></svg></div></div>
+
+<section id="v-beranda">
+<p class="tag">Jaga dengan data, rawat dengan hati.</p>
+<div class="banner" role="note"><svg width="22" height="22"><use href="#warn"/></svg><div><b>Data fiktif.</b> Semua data hewan, pemilik, dan dokter di prototipe ini hanya contoh, bukan data sebenarnya.</div></div>
+<h1 style="margin-bottom:22px">Hewan titipan saya</h1>
+<div class="card"><svg class="ears" width="70" height="12" aria-hidden="true"><use href="#earc"/></svg>
+<div class="head"><div class="pet"><svg width="44" height="44" aria-hidden="true"><use href="#cat"/></svg><div><b>Mochi</b><span class="sub">Kucing · hari ke-2 dari 3</span></div></div><span class="pill red">Tidak normal</span></div>
+<div class="tiles"><div class="tile"><small>Suhu</small><b>39,6°C</b></div><div class="tile"><small>Makan</small><b>20%</b></div><div class="tile"><small>Aktivitas</small><b>Rendah</b></div></div>
+<p style="font-size:13px;margin:0 0 12px">Dokter jaga sudah dinotifikasi dan sedang memeriksa.</p>
+<button class="btn" data-go="mochi">Lihat detail</button></div>
+<div class="card" style="margin-top:26px"><svg class="ears" width="76" height="14" style="top:-13px;left:20px" aria-hidden="true"><use href="#eard"/></svg>
+<div class="head"><div class="pet"><svg width="44" height="44" aria-hidden="true"><use href="#dog"/></svg><div><b>Bruno</b><span class="sub">Anjing · hari ke-1 dari 5</span></div></div><span class="pill">Normal</span></div>
+<p class="sub" style="margin:12px 0">Semua indikator sesuai kebiasaan Bruno.</p>
+<button class="btn" data-go="bruno">Lihat detail</button></div>
+</section>
+
+<section id="v-mochi" hidden>
+<button class="back" data-go="beranda" aria-label="Kembali ke beranda"><svg width="24" height="24"><use href="#back"/></svg></button>
+<div class="head" style="margin:0 0 16px"><div class="pet"><svg width="48" height="48" aria-hidden="true"><use href="#cat"/></svg><div><h1>Mochi</h1><span class="sub">Kucing · hari ke-2 dari 3</span></div></div><span class="pill red">Tidak normal</span></div>
+<div class="card"><div class="lbl">Dibanding kebiasaan Mochi</div><div class="row"><span>Suhu tubuh</span><b>39,6°C <i>(biasa 38,6)</i></b></div><div class="row"><span>Makan</span><b>20% <i>(biasa 100%)</i></b></div><div class="row"><span>Aktivitas</span><b>Rendah</b></div></div>
+<div class="card" style="margin-bottom:16px"><div class="lbl">Kronologi malam ini</div><div class="tl"><b>22.40</b> Suhu mulai naik<br><b>22.52</b> Makan berkurang<br><b>23.04</b> Status tidak normal, dokter jaga dinotifikasi<br><b>23.10</b> Dokter mulai memeriksa</div></div>
+<button class="btn" data-go="chat">Hubungi dokter jaga</button>
+</section>
+
+<section id="v-bruno" hidden>
+<button class="back" data-go="beranda" aria-label="Kembali ke beranda"><svg width="24" height="24"><use href="#back"/></svg></button>
+<div class="head" style="margin:0 0 16px"><div class="pet"><svg width="48" height="48" aria-hidden="true"><use href="#dog"/></svg><div><h1>Bruno</h1><span class="sub">Anjing · hari ke-1 dari 5</span></div></div><span class="pill">Normal</span></div>
+<div class="card"><div class="lbl">Dibanding kebiasaan Bruno</div><div class="row"><span>Suhu tubuh</span><b>38,6°C <i>(biasa 38,5)</i></b></div><div class="row"><span>Makan</span><b>100% <i>(biasa 100%)</i></b></div><div class="row"><span>Aktivitas</span><b>Aktif</b></div></div>
+<div class="card" style="margin-bottom:16px"><div class="lbl">Kronologi hari ini</div><div class="tl"><b>07.00</b> Sarapan habis<br><b>09.30</b> Bermain di area outdoor<br><b>12.00</b> Istirahat siang<br><b>14.00</b> Semua indikator normal</div></div>
+<button class="btn btn2" data-go="laporan">Lihat laporan harian</button>
+</section>
+
+<section id="v-laporan" hidden>
+<h1 style="margin-top:22px">Laporan harian</h1>
+<p class="tag" style="margin-top:4px">Dikirim otomatis ke pemilik.</p>
+<div class="card"><div class="head"><div class="pet"><svg width="44" height="44" aria-hidden="true"><use href="#cat"/></svg><div><b>Mochi</b><span class="sub">Kucing · hari ke-2 dari 3</span></div></div><span class="pill red">Tidak normal</span></div>
+<div class="tiles"><div class="tile"><small>Makan</small><b>Menurun</b></div><div class="tile"><small>Aktivitas</small><b>Rendah</b></div><div class="tile"><small>Suhu tertinggi</small><b>39,6°C</b></div></div>
+<div class="sub">Catatan dokter jaga</div><div style="font-size:14px;line-height:1.5">[CATATAN DOKTER HEWAN]</div></div>
+<div class="card"><div class="head"><div class="pet"><svg width="44" height="44" aria-hidden="true"><use href="#dog"/></svg><div><b>Bruno</b><span class="sub">Anjing · hari ke-1 dari 5</span></div></div><span class="pill">Normal</span></div>
+<div class="tiles"><div class="tile"><small>Makan</small><b>Normal</b></div><div class="tile"><small>Aktivitas</small><b>Aktif</b></div><div class="tile"><small>Suhu tertinggi</small><b>38,6°C</b></div></div>
+<div class="sub">Catatan dokter jaga</div><div style="font-size:14px;line-height:1.5">[CATATAN DOKTER HEWAN]</div></div>
+</section>
+
+<section id="v-dokter" hidden>
+<h1 style="margin:22px 0 14px">Dokter hewan jaga</h1>
+<div class="banner" role="note"><svg width="22" height="22"><use href="#warn"/></svg><div><b>Data fiktif.</b> Nama dan data dokter hewan di layar ini hanya contoh untuk prototipe, bukan dokter sebenarnya.</div></div>
+<div class="card vet"><div class="pet"><svg width="52" height="52" aria-hidden="true"><use href="#vet"/></svg><div><b>drh. Anindya Prameswari</b><span class="sub">Dokter jaga malam · Kucing &amp; anjing</span></div></div>
+<div class="shift"><span>Bertugas 18.00–06.00</span><span class="pill acc">Memeriksa Mochi</span></div>
+<p style="font-size:13px;margin:0 0 12px">Menerima notifikasi status tidak normal Mochi pukul 23.04.</p>
+<button class="btn" data-go="chat"><svg width="20" height="20" aria-hidden="true"><use href="#chat"/></svg>Chat</button></div>
+<div class="card vet"><div class="pet"><svg width="52" height="52" aria-hidden="true"><use href="#vet"/></svg><div><b>drh. Raka Mahendra</b><span class="sub">Dokter jaga pagi · Kucing &amp; anjing</span></div></div>
+<div class="shift"><span>Bertugas 06.00–18.00</span><span class="pill mut">Istirahat</span></div>
+<p style="font-size:13px;margin:0 0 12px">Akan melanjutkan pemantauan mulai pukul 06.00.</p>
+<button class="btn" disabled aria-label="Chat tidak tersedia, dokter sedang istirahat"><svg width="20" height="20" aria-hidden="true"><use href="#chat"/></svg>Chat</button></div>
+</section>
+
+<section id="v-chat" hidden>
+<div class="chead"><button class="back" data-go="dokter" aria-label="Kembali ke daftar dokter" style="margin:0"><svg width="24" height="24"><use href="#back"/></svg></button><svg width="40" height="40" aria-hidden="true"><use href="#vet"/></svg><div><b>drh. Anindya Prameswari</b><span class="sub" style="display:block;font-size:12px">Online · Membahas Mochi</span></div><svg width="36" height="36" aria-hidden="true"><use href="#cat"/></svg></div>
+<div class="banner" role="note" style="margin-bottom:12px"><svg width="22" height="22"><use href="#warn"/></svg><div><b>Data fiktif.</b> Dokter dan percakapan ini hanya contoh.</div></div>
+<div class="bubs" id="bubs" aria-live="polite">
+<div class="m"><div>Selamat malam, saya drh. Anindya. Saya sudah memeriksa Mochi setelah ada notifikasi status tidak normal tadi.</div><small>23.12</small></div>
+<div class="m"><div>Suhu Mochi 39,6°C dan nafsu makannya menurun. Saat ini Mochi kami observasi di ruang tenang dan sudah disediakan air minum.</div><small>23.13</small></div>
+<div class="m me"><div>Selamat malam, dok. Apakah kondisi Mochi parah? Perlu saya jemput sekarang?</div><small>23.15</small></div>
+<div class="m"><div>Belum perlu panik. Tag Mochi kami pantau terus, dan saya kabari lagi satu jam ke depan. Jika suhunya belum turun, kami lakukan pemeriksaan lanjutan.</div><small>23.17</small></div>
+<div class="m me"><div>Baik, dok. Terima kasih, tolong kabari ya.</div><small>23.18</small></div>
+</div>
+</section>
+</main>
+
+<nav class="nav" aria-label="Navigasi utama">
+<button data-go="beranda" data-tab="beranda"><svg width="22" height="22" aria-hidden="true"><use href="#home"/></svg>Beranda</button>
+<button data-go="laporan" data-tab="laporan"><svg width="22" height="22" aria-hidden="true"><use href="#doc"/></svg>Laporan</button>
+<button data-go="dokter" data-tab="dokter"><svg width="22" height="22" aria-hidden="true"><use href="#heart"/></svg>Dokter</button>
+</nav>
+<div class="compose"><input id="msg" aria-label="Tulis pesan untuk dokter" placeholder="Tulis pesan tentang Mochi" autocomplete="off"><button class="send" id="send" aria-label="Kirim"><svg width="20" height="20" aria-hidden="true"><use href="#send"/></svg></button></div>
+<script>
+var V=['beranda','mochi','bruno','laporan','dokter','chat'],TAB={mochi:'beranda',bruno:'beranda'};
+function show(v){
+  if(V.indexOf(v)<0)v='beranda';
+  V.forEach(function(x){document.getElementById('v-'+x).hidden=(x!==v)});
+  document.body.setAttribute('data-view',v);
+  var t=TAB[v]||v;
+  document.querySelectorAll('.nav button').forEach(function(b){
+    if(b.getAttribute('data-tab')===t)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current');
+  });
+  window.scrollTo(0,0);
+}
+document.addEventListener('click',function(e){
+  var b=e.target.closest('[data-go]');
+  if(b&&!b.disabled)location.hash=b.getAttribute('data-go');
+});
+window.addEventListener('hashchange',function(){show(location.hash.slice(1))});
+show(location.hash.slice(1));
+function add(text,me,time){
+  var m=document.createElement('div');m.className='m'+(me?' me':'');
+  var d=document.createElement('div');d.textContent=text;
+  var s=document.createElement('small');s.textContent=time;
+  m.appendChild(d);m.appendChild(s);
+  document.getElementById('bubs').appendChild(m);
+  window.scrollTo(0,document.body.scrollHeight);
+}
+function kirim(){
+  var i=document.getElementById('msg'),t=i.value.trim();
+  if(!t)return;
+  add(t,true,'Baru saja');i.value='';
+  setTimeout(function(){add('Baik, pesannya sudah saya catat dan Mochi tetap kami pantau. (Balasan otomatis contoh)',false,'Baru saja')},800);
+}
+document.getElementById('send').addEventListener('click',kirim);
+document.getElementById('msg').addEventListener('keydown',function(e){if(e.key==='Enter')kirim()});
+</script>
+</body>
+</html>
